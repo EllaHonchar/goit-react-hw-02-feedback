@@ -1,5 +1,8 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
+import { FeedbackOptions } from './FeedbackOptions/FeedbackOptions';
 import { Statistics } from './Statistics/Statistics';
+import { Section } from './Section/Section';
+import { Notification } from './Notification/Notification';
 
 export class App extends Component {
   state = {
@@ -43,26 +46,28 @@ export class App extends Component {
     const { good, neutral, bad } = this.state;
 
     return (
-      <Fragment>
-        <h1>Please leave feedback</h1>
-        <button type="button" name="good" onClick={this.handleIncrement}>
-          Good
-        </button>
-        <button type="button" name="neutral" onClick={this.handleIncrement}>
-          Neutral
-        </button>
-        <button type="button" name="bad" onClick={this.handleIncrement}>
-          Bad
-        </button>
-        <h2>Statistics</h2>
-        <Statistics
-          good={good}
-          neutral={neutral}
-          bad={bad}
-          total={this.countTotalFeedback()}
-          positiveFeedback={this.countPositiveFeedbackPercentage()}
-        />
-      </Fragment>
+      <>
+        <Section title={'Please leave feedback'}>
+          <FeedbackOptions
+            options={Object.keys(this.state)}
+            handleIncrement={this.handleIncrement}
+          />
+        </Section>
+
+        <Section title={'Statistics'}>
+          {this.countTotalFeedback() > 0 ? (
+            <Statistics
+              good={good}
+              neutral={neutral}
+              bad={bad}
+              total={this.countTotalFeedback()}
+              positiveFeedback={this.countPositiveFeedbackPercentage()}
+            />
+          ) : (
+            <Notification message={'There is no feedback'} />
+          )}
+        </Section>
+      </>
     );
   }
 }
